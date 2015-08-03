@@ -40,16 +40,18 @@ Vulcanize.prototype.vulcanize = function(options) {
           reject(error);
         }
 
+        var outputHandler = options.outputHandler || fs.writeFileSync;
+
         if (options.crisper) {
           var crisper = require('crisper');
           var jsFileName = path.basename(options.output, '.html') + '.js';
           var jsOutputPath = path.resolve(path.dirname(options.output), jsFileName);
           var out = crisper.split(html, jsFileName);
           html = out.html;
-          fs.writeFileSync(jsOutputPath, out.js);
+          outputHandler(jsOutputPath, out.js);
         }
 
-        fs.writeFileSync(options.output, html);
+        outputHandler(options.output, html);
         resolve();
       });
     });

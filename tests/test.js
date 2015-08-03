@@ -4,6 +4,7 @@ var vulcanize = require('..');
 var Broccoli = require('broccoli');
 var path = require('path');
 var fs = require('fs');
+var sinon = require('sinon');
 var builder;
 
 afterEach(function() {
@@ -114,19 +115,60 @@ it('should accept a broccoli tree', function() {
   });
 });
 
-it('should break html & JS into outputs and push them into vulcanize when crisper is enabled', function() {
+it('should call outputHandler', function() {
+  var callbackSpy = sinon.spy();
+  var fileName = 'basic-index.html';
   var tree = vulcanize('fixtures', {
     input: 'basic-index.html',
-    crisper: true
+    outputHandler: callbackSpy
   });
 
   builder = new Broccoli.Builder(tree);
 
   return builder.build().then(function(result) {
     var indexHtml = path.join(result.directory, 'basic-index.html');
-    assert(fs.existsSync(indexHtml));
+    assert(callbackSpy.withArgs(indexHtml).calledOnce);
+    assert(!fs.existsSync(indexHtml));
+  });
+});
 
-    var indexJs = path.join(result.directory, 'basic-index.js');
-    assert(fs.existsSync(indexJs));
+context('when using crisper', function() {
+  it('creates a javascript file', function() {
+    var tree = vulcanize('fixtures', {
+      input: 'basic-index.html',
+      crisper: true
+    });
+
+    builder = new Broccoli.Builder(tree);
+
+    return builder.build().then(function(result) {
+      var indexHtml = path.join(result.directory, 'basic-index.html');
+      assert(fs.existsSync(indexHtml));
+
+      var indexJs = path.join(result.directory, 'basic-index.js');
+      assert(fs.existsSync(indexJs));
+    });
+  });
+
+  it('calls the outputHandler on the js file', function() {
+    var callbackSpy = sinon.spy();
+    var fileName = 'basic-index.html';
+    var tree = vulcanize('fixtures', {
+      input: 'basic-index.html',
+      crisper: true,
+      outputHandler: callbackSpy
+    });
+
+    builder = new Broccoli.Builder(tree);
+
+    return builder.build().then(function(result) {
+      var indexHtml = path.join(result.directory, 'basic-index.html');
+      assert(callbackSpy.withArgs(indexHtml).calledOnce);
+      assert(!fs.existsSync(indexHtml));
+
+      var indexJs = path.join(result.directory, 'basic-index.js');
+      assert(!fs.existsSync(indexJs));
+      assert(callbackSpy.withArgs(indexJs).calledOnce);
+    });
   });
 });

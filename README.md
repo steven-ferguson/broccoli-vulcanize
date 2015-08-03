@@ -24,7 +24,10 @@ var options = {
   stripComments: false,
   inlineScripts: false,
   inlineCss: false,
-  implicitStrip: false
+  implicitStrip: false,
+  outputHandler: function(filename, data) {
+    // An output handler function to call rather than writing the processing result to file
+  }
 };
 
 module.exports = vulcanize(inputTree, options);
