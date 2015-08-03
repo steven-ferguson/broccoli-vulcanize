@@ -17,7 +17,7 @@ var inputTree = 'public';
 var options = {
   input: 'index.html',
   output: 'output/vulcanized.html',
-  crisper: 'vulcanized.js',
+  crisper: true,
   excludes: [/^data:/, /^http[s]?:/, /^\//],
   abspath: '/webroot/',
   stripExcludes: false,

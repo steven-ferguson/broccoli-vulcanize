@@ -117,7 +117,7 @@ it('should accept a broccoli tree', function() {
 it('should break html & JS into outputs and push them into vulcanize when crisper is enabled', function() {
   var tree = vulcanize('fixtures', {
     input: 'basic-index.html',
-    crisper: 'basic-index.js'
+    crisper: true
   });
 
   builder = new Broccoli.Builder(tree);

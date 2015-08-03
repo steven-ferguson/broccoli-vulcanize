@@ -42,12 +42,11 @@ Vulcanize.prototype.vulcanize = function(options) {
 
         if (options.crisper) {
           var crisper = require('crisper');
-          var cspPath = path.resolve(path.dirname(options.output), options.crisper);
-          var out = crisper.split(html, options.crisper);
+          var jsFileName = path.basename(options.output, '.html') + '.js';
+          var jsOutputPath = path.resolve(path.dirname(options.output), jsFileName);
+          var out = crisper.split(html, jsFileName);
           html = out.html;
-          var cspTarget = fs.openSync(cspPath, 'w');
-          fs.writeSync(cspTarget, out.js);
-          fs.closeSync(cspTarget);
+          fs.writeFileSync(jsOutputPath, out.js);
         }
 
         fs.writeFileSync(options.output, html);
