@@ -29,6 +29,7 @@
     "broccoli-writer": "^0.1.1",
     "cheerio": "^0.18.0",
     "clone": "^0.1.18",
+    "crisper": "^1.0.4",
     "mkdirp": "^0.5.0",
     "promise-map-series": "^0.2.0",
     "rsvp": "^3.0.14",

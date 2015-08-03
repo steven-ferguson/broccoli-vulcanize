@@ -113,3 +113,20 @@ it('should accept a broccoli tree', function() {
     assert(fs.existsSync(indexHtml));
   });
 });
+
+it('should break html & JS into outputs and push them into vulcanize when crisper is enabled', function() {
+  var tree = vulcanize('fixtures', {
+    input: 'basic-index.html',
+    crisper: 'basic-index.js'
+  });
+
+  builder = new Broccoli.Builder(tree);
+
+  return builder.build().then(function(result) {
+    var indexHtml = path.join(result.directory, 'basic-index.html');
+    assert(fs.existsSync(indexHtml));
+
+    var indexJs = path.join(result.directory, 'basic-index.js');
+    assert(fs.existsSync(indexJs));
+  });
+});

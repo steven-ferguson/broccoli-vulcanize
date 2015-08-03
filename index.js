@@ -40,6 +40,16 @@ Vulcanize.prototype.vulcanize = function(options) {
           reject(error);
         }
 
+        if (options.crisper) {
+          var crisper = require('crisper');
+          var cspPath = path.resolve(path.dirname(options.output), options.crisper);
+          var out = crisper.split(html, options.crisper);
+          html = out.html;
+          var cspTarget = fs.openSync(cspPath, 'w');
+          fs.writeSync(cspTarget, out.js);
+          fs.closeSync(cspTarget);
+        }
+
         fs.writeFileSync(options.output, html);
         resolve();
       });
